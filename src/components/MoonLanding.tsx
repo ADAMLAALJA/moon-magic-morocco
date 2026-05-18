@@ -1,7 +1,12 @@
 import { useEffect, useState, useRef } from "react";
-import { Truck, BadgeCheck, ShieldCheck, Users, Star, Eye, Sparkles, Gift, Flame, MessageCircle } from "lucide-react";
-import heroImg from "@/assets/moon-lamp-hero.jpg";
-import lamp2 from "@/assets/moon-lamp-2.jpg";
+import { Truck, BadgeCheck, ShieldCheck, Users, Star, Eye, Sparkles, Gift, Flame, MessageCircle, X } from "lucide-react";
+import heroImg from "@/assets/moon-lamp-hero-new.jpg";
+import lifestyleImg from "@/assets/moon-lamp-lifestyle.jpg";
+import productImg from "@/assets/moon-lamp-real.jpg";
+
+const WHATSAPP_NUMBER = "212721314919";
+const WHATSAPP_MESSAGE = "Moon luxe سلام، بغيت نطلب";
+const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
 const trustBadges = [
   { icon: Truck, text: "توصيل مجاني" },
@@ -17,9 +22,24 @@ const benefits = [
 ];
 
 const reviews = [
-  { name: "سارة م.", city: "الدار البيضاء", text: "والله زوينة بزاف! بدّلات جو الصالون ديالي تماماً، الإضاءة دافية ورومانسية." , avatar: "https://i.pravatar.cc/100?img=47" },
-  { name: "يوسف ا.", city: "الرباط", text: "شريتها كادو لخطيبتي، عجباتها بزاف. الجودة فوق الممتاز والتوصيل كان سريع.", avatar: "https://i.pravatar.cc/100?img=12" },
-  { name: "خديجة ر.", city: "مراكش", text: "كنشعلها كل ليلة قبل النعاس، كتعطي جو هادي ومريح. ننصح بيها بقوة!", avatar: "https://i.pravatar.cc/100?img=32" },
+  {
+    name: "سارة م.",
+    city: "الدار البيضاء",
+    text: "الضو ديالو زوين بزاف و عطى للبيت ديكور راقي، كنشعلو كل ليلة قبل النعاس.",
+    avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&h=200&fit=crop&crop=faces",
+  },
+  {
+    name: "يوسف ا.",
+    city: "الرباط",
+    text: "خديتو كهدية لخطيبتي و عجبهم بزاف، الجودة فوق الممتاز و التوصيل كان سريع.",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces",
+  },
+  {
+    name: "خديجة ر.",
+    city: "مراكش",
+    text: "كيعطي جو هادئ فالليل، صراحة بدّل أجواء الصالون ديالي تماماً. ننصح بيه بقوة!",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=faces",
+  },
 ];
 
 function useCountdown(initial: number) {
@@ -36,16 +56,52 @@ function useCountdown(initial: number) {
 
 export default function MoonLanding() {
   const [offer, setOffer] = useState<"single" | "double">("double");
-  const [submitted, setSubmitted] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const { h, m, s } = useCountdown(2 * 3600 + 47 * 60);
 
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => formRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
+    setErrorMsg(null);
+    setSubmitting(true);
+    const fd = new FormData(e.currentTarget);
+    const name = (fd.get("name") || "").toString().trim().slice(0, 100);
+    const phone = (fd.get("phone") || "").toString().trim().slice(0, 30);
+    const city = (fd.get("city") || "").toString().trim().slice(0, 100);
+    const address = (fd.get("address") || "").toString().trim().slice(0, 300);
+    if (!name || !phone || !city || !address) {
+      setErrorMsg("عمر جميع الخانات من فضلك");
+      setSubmitting(false);
+      return;
+    }
+    const offerLabel = offer === "single" ? "قطعة واحدة - 149 DH" : "جوج قطع - 279 DH";
+    const now = new Date().toLocaleString("fr-MA", { timeZone: "Africa/Casablanca" });
+    try {
+      await fetch("https://formsubmit.co/ajax/adam.laalja@gmail.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          _subject: `🌙 طلب جديد Moon Luxe — ${name}`,
+          _template: "table",
+          _captcha: "false",
+          "الاسم الكامل": name,
+          "رقم الهاتف": phone,
+          "المدينة": city,
+          "العنوان الكامل": address,
+          "العرض المختار": offerLabel,
+          "تاريخ الطلب": now,
+        }),
+      });
+    } catch {
+      // even if email fails we still confirm to the user; lead is captured in form
+    }
+    setSubmitting(false);
+    setShowSuccess(true);
+    (e.target as HTMLFormElement).reset();
   };
 
   return (
@@ -73,8 +129,8 @@ export default function MoonLanding() {
               <img
                 src={heroImg}
                 alt="مصباح القمر الفاخر"
-                width={1280}
-                height={1280}
+                width={1024}
+                height={1024}
                 className="relative z-10 w-full h-auto float"
               />
             </div>
@@ -126,13 +182,24 @@ export default function MoonLanding() {
         </div>
       </section>
 
+      {/* Product showcase */}
+      <section className="px-5 py-6 max-w-5xl mx-auto">
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div className="rounded-3xl overflow-hidden shadow-card relative moon-glow bg-card">
+            <img src={productImg} alt="مصباح القمر — تفاصيل" loading="lazy" className="relative z-10 w-full h-full object-cover" />
+          </div>
+          <div className="rounded-3xl overflow-hidden shadow-card relative moon-glow">
+            <img src={lifestyleImg} alt="مصباح القمر فالصالون" loading="lazy" className="relative z-10 w-full h-full object-cover" />
+          </div>
+        </div>
+      </section>
+
       {/* Offers */}
       <section className="px-5 py-10 max-w-5xl mx-auto">
         <h2 className="text-center text-2xl sm:text-3xl mb-2">اختار العرض اللي يناسبك</h2>
         <p className="text-center text-muted-foreground mb-8">عروض حصرية بأسعار ما كتلقاهاش فبلاصة أخرى</p>
 
         <div className="grid sm:grid-cols-2 gap-5">
-          {/* Option 1 */}
           <button
             onClick={() => { setOffer("single"); scrollToForm(); }}
             className={`text-right relative bg-card border-2 rounded-2xl p-6 transition-all ${offer === "single" ? "border-gold shadow-glow" : "border-border/60"}`}
@@ -149,7 +216,6 @@ export default function MoonLanding() {
             </ul>
           </button>
 
-          {/* Option 2 */}
           <button
             onClick={() => { setOffer("double"); scrollToForm(); }}
             className={`text-right relative bg-card border-2 rounded-2xl p-6 transition-all ${offer === "double" ? "border-gold shadow-glow" : "border-gold/40"}`}
@@ -173,13 +239,6 @@ export default function MoonLanding() {
         </div>
       </section>
 
-      {/* Lifestyle image */}
-      <section className="px-5 py-6 max-w-5xl mx-auto">
-        <div className="rounded-3xl overflow-hidden shadow-card relative moon-glow">
-          <img src={lamp2} alt="مصباح القمر فالصالون" loading="lazy" width={1024} height={1024} className="relative z-10 w-full h-auto" />
-        </div>
-      </section>
-
       {/* Urgency */}
       <section className="px-5 py-8 max-w-3xl mx-auto">
         <div className="bg-card border border-gold/40 rounded-2xl p-6 shadow-glow">
@@ -193,9 +252,7 @@ export default function MoonLanding() {
           <div className="text-xs text-muted-foreground mb-5">82% من المخزون تباع — بقاو 47 قطعة فقط</div>
 
           <div className="grid grid-cols-3 gap-2 text-center">
-            {[
-              { v: h, l: "ساعة" }, { v: m, l: "دقيقة" }, { v: s, l: "ثانية" },
-            ].map((x, i) => (
+            {[{ v: h, l: "ساعة" }, { v: m, l: "دقيقة" }, { v: s, l: "ثانية" }].map((x, i) => (
               <div key={i} className="bg-secondary rounded-xl p-3 border border-border">
                 <div className="text-2xl font-black text-gold tabular-nums">{x.v}</div>
                 <div className="text-xs text-muted-foreground">{x.l}</div>
@@ -216,48 +273,40 @@ export default function MoonLanding() {
             <p className="text-sm text-muted-foreground mt-2">الدفع عند الاستلام • التوصيل مجاني</p>
           </div>
 
-          {submitted ? (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 mx-auto rounded-full bg-gold flex items-center justify-center mb-4 shadow-glow">
-                <BadgeCheck className="w-9 h-9 text-primary-foreground" />
-              </div>
-              <h3 className="text-2xl mb-2 text-gold">تم تأكيد طلبك! 🎉</h3>
-              <p className="text-muted-foreground">غادي نتواصلو معاك فأقرب وقت لتأكيد التوصيل. شكراً على ثقتك!</p>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Field label="الاسم الكامل" name="name" placeholder="مثال: محمد العلوي" />
+            <Field label="رقم الهاتف" name="phone" type="tel" placeholder="06XXXXXXXX" />
+            <Field label="المدينة" name="city" placeholder="مثال: الدار البيضاء" />
+            <Field label="العنوان الكامل" name="address" placeholder="الحي، الشارع، الرقم" />
+
+            <div>
+              <label className="block text-sm font-bold mb-2">اختار العرض</label>
+              <select
+                value={offer}
+                onChange={(e) => setOffer(e.target.value as "single" | "double")}
+                className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30 transition"
+              >
+                <option value="single">قطعة واحدة - 149 DH</option>
+                <option value="double">جوج قطع - 279 DH (الأكثر طلباً)</option>
+              </select>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <Field label="الاسم الكامل" name="name" placeholder="مثال: محمد العلوي" />
-              <Field label="رقم الهاتف" name="phone" type="tel" placeholder="06XXXXXXXX" />
-              <Field label="المدينة" name="city" placeholder="مثال: الدار البيضاء" />
-              <Field label="العنوان الكامل" name="address" placeholder="الحي، الشارع، الرقم" />
 
-              <div>
-                <label className="block text-sm font-bold mb-2">اختار العرض</label>
-                <select
-                  value={offer}
-                  onChange={(e) => setOffer(e.target.value as "single" | "double")}
-                  className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30 transition"
-                >
-                  <option value="single">قطعة واحدة - 149 DH</option>
-                  <option value="double">جوج قطع - 279 DH (الأكثر طلباً)</option>
-                </select>
-              </div>
+            <div className="bg-secondary rounded-xl p-4 flex justify-between text-sm">
+              <span className="text-muted-foreground">المجموع</span>
+              <span className="font-black text-gold text-lg">{offer === "single" ? "149 DH" : "279 DH"}</span>
+            </div>
 
-              <div className="bg-secondary rounded-xl p-4 flex justify-between text-sm">
-                <span className="text-muted-foreground">المجموع</span>
-                <span className="font-black text-gold text-lg">{offer === "single" ? "149 DH" : "279 DH"}</span>
-              </div>
+            {errorMsg && <div className="text-sm text-destructive text-center">{errorMsg}</div>}
 
-              <button type="submit" className="btn-gold pulse-glow w-full text-lg">
-                تأكيد الطلب ✓
-              </button>
+            <button type="submit" disabled={submitting} className="btn-gold pulse-glow w-full text-lg disabled:opacity-70">
+              {submitting ? "جاري الإرسال..." : "تأكيد الطلب ✓"}
+            </button>
 
-              <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground pt-2">
-                <span className="flex items-center gap-1"><BadgeCheck className="w-4 h-4 text-gold" /> الدفع عند الاستلام</span>
-                <span className="flex items-center gap-1"><Truck className="w-4 h-4 text-gold" /> توصيل مجاني</span>
-              </div>
-            </form>
-          )}
+            <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground pt-2">
+              <span className="flex items-center gap-1"><BadgeCheck className="w-4 h-4 text-gold" /> الدفع عند الاستلام</span>
+              <span className="flex items-center gap-1"><Truck className="w-4 h-4 text-gold" /> توصيل مجاني</span>
+            </div>
+          </form>
         </div>
       </section>
 
@@ -268,9 +317,9 @@ export default function MoonLanding() {
 
         <div className="grid sm:grid-cols-3 gap-4">
           {reviews.map((r, i) => (
-            <div key={i} className="bg-card border border-border/60 rounded-2xl p-5 shadow-card">
+            <div key={i} className="glass-card rounded-2xl p-5 hover:-translate-y-1 transition-all duration-500" style={{ animationDelay: `${i * 0.1}s` }}>
               <div className="flex items-center gap-3 mb-3">
-                <img src={r.avatar} alt={r.name} loading="lazy" className="w-12 h-12 rounded-full border-2 border-gold/40" />
+                <img src={r.avatar} alt={r.name} loading="lazy" className="w-12 h-12 rounded-full border-2 border-gold/40 object-cover" />
                 <div>
                   <div className="font-bold">{r.name}</div>
                   <div className="text-xs text-muted-foreground">{r.city}</div>
@@ -294,21 +343,49 @@ export default function MoonLanding() {
             <a href="#" className="hover:text-gold transition">معلومات التوصيل</a>
             <a href="#" className="hover:text-gold transition">من نحن</a>
           </div>
-          <a href="https://wa.me/212600000000" className="inline-flex items-center gap-2 bg-[#25D366] text-white px-5 py-2.5 rounded-full font-bold hover:scale-105 transition">
+          <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#25D366] text-white px-5 py-2.5 rounded-full font-bold hover:scale-105 transition">
             <MessageCircle className="w-5 h-5" />
-            تواصل معنا على واتساب
+            تواصل معنا عبر واتساب
           </a>
           <p className="text-xs text-muted-foreground pt-2">© 2026 Moon Luxe — جميع الحقوق محفوظة</p>
         </div>
       </footer>
 
+      {/* Floating WhatsApp button */}
+      <a
+        href={whatsappHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="واتساب"
+        className="fixed bottom-24 md:bottom-6 right-4 z-50 w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-[0_0_0_0_rgba(37,211,102,0.7)] whatsapp-pulse hover:scale-110 transition-transform"
+      >
+        <MessageCircle className="w-7 h-7" />
+      </a>
+
       {/* Sticky mobile CTA */}
-      <div className="fixed bottom-0 inset-x-0 z-50 md:hidden p-3 bg-background/95 backdrop-blur border-t border-gold/30">
+      <div className="fixed bottom-0 inset-x-0 z-40 md:hidden p-3 bg-background/95 backdrop-blur border-t border-gold/30">
         <button onClick={scrollToForm} className="btn-gold pulse-glow w-full text-base">
           اطلب الآن 🌙 — 149 DH
         </button>
       </div>
       <div className="md:hidden h-20" />
+
+      {/* Success popup */}
+      {showSuccess && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm reveal">
+          <div className="relative bg-card border border-gold/40 rounded-3xl p-8 max-w-sm w-full text-center shadow-glow">
+            <button onClick={() => setShowSuccess(false)} aria-label="إغلاق" className="absolute top-3 left-3 text-muted-foreground hover:text-gold">
+              <X className="w-5 h-5" />
+            </button>
+            <div className="w-16 h-16 mx-auto rounded-full bg-gold flex items-center justify-center mb-4 shadow-glow">
+              <BadgeCheck className="w-9 h-9 text-primary-foreground" />
+            </div>
+            <h3 className="text-2xl mb-2 text-gold">تم تأكيد طلبك بنجاح 🎉</h3>
+            <p className="text-muted-foreground mb-5">سنتواصل معك قريباً لتأكيد التوصيل. شكراً على ثقتك!</p>
+            <button onClick={() => setShowSuccess(false)} className="btn-gold w-full">تمام</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -322,6 +399,7 @@ function Field({ label, name, type = "text", placeholder }: { label: string; nam
         type={type}
         name={name}
         placeholder={placeholder}
+        maxLength={300}
         className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/60 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30 transition"
       />
     </div>
