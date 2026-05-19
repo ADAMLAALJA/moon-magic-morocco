@@ -1,8 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import { Truck, BadgeCheck, ShieldCheck, Users, Star, Eye, Sparkles, Gift, Flame, MessageCircle, X } from "lucide-react";
 import heroImg from "@/assets/moon-lamp-hero-new.jpg";
-import lifestyleImg from "@/assets/moon-lamp-lifestyle-v2.jpg";
-import productImg from "@/assets/moon-lamp-real.jpg";
+import sleepImg from "@/assets/moon-sleep.jpg";
+import workImg from "@/assets/moon-work.jpg";
+import giftImg from "@/assets/moon-gift.jpg";
+import bedroomImg from "@/assets/moon-bedroom.jpg";
 
 const WHATSAPP_NUMBER = "212721314919";
 const WHATSAPP_MESSAGE = "سلام، بغيت نطلب Moon Luxe";
@@ -79,21 +81,23 @@ export default function MoonLanding() {
       return;
     }
     const offerLabel = offer === "single" ? "قطعة واحدة - 149 DH" : "جوج قطع - 279 DH";
+    const quantity = offer === "single" ? 1 : 2;
     const now = new Date().toLocaleString("fr-MA", { timeZone: "Africa/Casablanca" });
     try {
       await fetch("https://formsubmit.co/ajax/laalja.adam@gmail.com", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
-          _subject: `🌙 طلب جديد Moon Luxe — ${name}`,
+          _subject: "طلب جديد - Moon Luxe",
           _template: "table",
           _captcha: "false",
-          "الاسم الكامل": name,
-          "رقم الهاتف": phone,
-          "المدينة": city,
-          "العنوان الكامل": address,
-          "العرض المختار": offerLabel,
-          "تاريخ الطلب": now,
+          "Nom complet": name,
+          "Téléphone": phone,
+          "Ville": city,
+          "Adresse": address,
+          "Offre choisie": offerLabel,
+          "Quantité": quantity,
+          "Date": now,
         }),
       });
     } catch {
@@ -182,17 +186,38 @@ export default function MoonLanding() {
         </div>
       </section>
 
-      {/* Product showcase */}
-      <section className="px-5 py-6 max-w-5xl mx-auto">
-        <div className="grid sm:grid-cols-2 gap-4">
-          <div className="rounded-3xl overflow-hidden shadow-card relative moon-glow bg-card">
-            <img src={productImg} alt="مصباح القمر — تفاصيل" loading="lazy" className="relative z-10 w-full h-full object-cover" />
-          </div>
-          <div className="rounded-3xl overflow-hidden shadow-card relative moon-glow">
-            <img src={lifestyleImg} alt="مصباح القمر فالصالون" loading="lazy" className="relative z-10 w-full h-full object-cover" />
-          </div>
+      {/* Product gallery */}
+      <section className="px-5 py-8 max-w-5xl mx-auto">
+        <h2 className="text-center text-2xl sm:text-3xl mb-6">
+          مصباح <span className="text-gold">القمر</span> فكل لحظة من حياتك
+        </h2>
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+          {[
+            { img: bedroomImg, label: "Relax" },
+            { img: sleepImg, label: "Sleep" },
+            { img: workImg, label: "Work" },
+            { img: giftImg, label: "Gift" },
+          ].map((it, i) => (
+            <div
+              key={i}
+              className="group relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-card aspect-square moon-glow bg-card"
+            >
+              <img
+                src={it.img}
+                alt={`Moon Luxe — ${it.label}`}
+                loading="lazy"
+                width={768}
+                height={768}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <span className="absolute top-3 left-3 bg-background/85 backdrop-blur text-foreground text-xs sm:text-sm font-bold px-3 py-1.5 rounded-full border border-gold/30 shadow-card">
+                {it.label}
+              </span>
+            </div>
+          ))}
         </div>
       </section>
+
 
       {/* Offers */}
       <section className="px-5 py-10 max-w-5xl mx-auto">
@@ -380,8 +405,8 @@ export default function MoonLanding() {
             <div className="w-16 h-16 mx-auto rounded-full bg-gold flex items-center justify-center mb-4 shadow-glow">
               <BadgeCheck className="w-9 h-9 text-primary-foreground" />
             </div>
-            <h3 className="text-2xl mb-2 text-gold">تم إرسال طلبك بنجاح 🎉</h3>
-            <p className="text-muted-foreground mb-5">سنتواصل معك قريباً لتأكيد التوصيل. شكراً على ثقتك!</p>
+            <h3 className="text-2xl mb-2 text-gold">تم إرسال طلبك بنجاح ✅</h3>
+            <p className="text-muted-foreground mb-5">سنتواصل معك قريباً لتأكيد الطلب. شكراً على ثقتك!</p>
             <button onClick={() => setShowSuccess(false)} className="btn-gold w-full">تمام</button>
           </div>
         </div>
