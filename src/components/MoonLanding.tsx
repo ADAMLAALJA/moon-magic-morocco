@@ -81,21 +81,23 @@ export default function MoonLanding() {
       return;
     }
     const offerLabel = offer === "single" ? "قطعة واحدة - 149 DH" : "جوج قطع - 279 DH";
+    const quantity = offer === "single" ? 1 : 2;
     const now = new Date().toLocaleString("fr-MA", { timeZone: "Africa/Casablanca" });
     try {
       await fetch("https://formsubmit.co/ajax/laalja.adam@gmail.com", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
-          _subject: `🌙 طلب جديد Moon Luxe — ${name}`,
+          _subject: "طلب جديد - Moon Luxe",
           _template: "table",
           _captcha: "false",
-          "الاسم الكامل": name,
-          "رقم الهاتف": phone,
-          "المدينة": city,
-          "العنوان الكامل": address,
-          "العرض المختار": offerLabel,
-          "تاريخ الطلب": now,
+          "Nom complet": name,
+          "Téléphone": phone,
+          "Ville": city,
+          "Adresse": address,
+          "Offre choisie": offerLabel,
+          "Quantité": quantity,
+          "Date": now,
         }),
       });
     } catch {
