@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import { Truck, BadgeCheck, ShieldCheck, Users, Star, Eye, Sparkles, Gift, Flame, MessageCircle, X } from "lucide-react";
 import heroImg from "@/assets/moon-lamp-hero-new.jpg";
-import lifestyleImg from "@/assets/moon-lamp-lifestyle.jpg";
+import lifestyleImg from "@/assets/moon-lamp-lifestyle-v2.jpg";
 import productImg from "@/assets/moon-lamp-real.jpg";
 
 const WHATSAPP_NUMBER = "212721314919";
-const WHATSAPP_MESSAGE = "Moon luxe سلام، بغيت نطلب";
+const WHATSAPP_MESSAGE = "سلام، بغيت نطلب Moon Luxe";
 const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
 const trustBadges = [
@@ -81,7 +81,7 @@ export default function MoonLanding() {
     const offerLabel = offer === "single" ? "قطعة واحدة - 149 DH" : "جوج قطع - 279 DH";
     const now = new Date().toLocaleString("fr-MA", { timeZone: "Africa/Casablanca" });
     try {
-      await fetch("https://formsubmit.co/ajax/adam.laalja@gmail.com", {
+      await fetch("https://formsubmit.co/ajax/laalja.adam@gmail.com", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
@@ -380,7 +380,7 @@ export default function MoonLanding() {
             <div className="w-16 h-16 mx-auto rounded-full bg-gold flex items-center justify-center mb-4 shadow-glow">
               <BadgeCheck className="w-9 h-9 text-primary-foreground" />
             </div>
-            <h3 className="text-2xl mb-2 text-gold">تم تأكيد طلبك بنجاح 🎉</h3>
+            <h3 className="text-2xl mb-2 text-gold">تم إرسال طلبك بنجاح 🎉</h3>
             <p className="text-muted-foreground mb-5">سنتواصل معك قريباً لتأكيد التوصيل. شكراً على ثقتك!</p>
             <button onClick={() => setShowSuccess(false)} className="btn-gold w-full">تمام</button>
           </div>
