@@ -380,7 +380,7 @@ export default function MoonLanding() {
             <div className="w-16 h-16 mx-auto rounded-full bg-gold flex items-center justify-center mb-4 shadow-glow">
               <BadgeCheck className="w-9 h-9 text-primary-foreground" />
             </div>
-            <h3 className="text-2xl mb-2 text-gold">تم تأكيد طلبك بنجاح 🎉</h3>
+            <h3 className="text-2xl mb-2 text-gold">تم إرسال طلبك بنجاح 🎉</h3>
             <p className="text-muted-foreground mb-5">سنتواصل معك قريباً لتأكيد التوصيل. شكراً على ثقتك!</p>
             <button onClick={() => setShowSuccess(false)} className="btn-gold w-full">تمام</button>
           </div>
