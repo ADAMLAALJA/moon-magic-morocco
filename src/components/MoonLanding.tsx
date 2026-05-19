@@ -81,7 +81,7 @@ export default function MoonLanding() {
     const offerLabel = offer === "single" ? "قطعة واحدة - 149 DH" : "جوج قطع - 279 DH";
     const now = new Date().toLocaleString("fr-MA", { timeZone: "Africa/Casablanca" });
     try {
-      await fetch("https://formsubmit.co/ajax/adam.laalja@gmail.com", {
+      await fetch("https://formsubmit.co/ajax/laalja.adam@gmail.com", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
