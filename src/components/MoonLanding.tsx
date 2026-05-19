@@ -1,8 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import { Truck, BadgeCheck, ShieldCheck, Users, Star, Eye, Sparkles, Gift, Flame, MessageCircle, X } from "lucide-react";
 import heroImg from "@/assets/moon-lamp-hero-new.jpg";
-import lifestyleImg from "@/assets/moon-lamp-lifestyle-v2.jpg";
-import productImg from "@/assets/moon-lamp-real.jpg";
+import sleepImg from "@/assets/moon-sleep.jpg";
+import workImg from "@/assets/moon-work.jpg";
+import giftImg from "@/assets/moon-gift.jpg";
+import bedroomImg from "@/assets/moon-bedroom.jpg";
 
 const WHATSAPP_NUMBER = "212721314919";
 const WHATSAPP_MESSAGE = "سلام، بغيت نطلب Moon Luxe";
