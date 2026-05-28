@@ -2,6 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import { Truck, BadgeCheck, ShieldCheck, Users, Star, Eye, Sparkles, Gift, Flame, MessageCircle, X } from "lucide-react";
 import heroImg from "@/assets/moon-lamp-hero-new.jpg";
 import { sendOrderEmail } from "@/lib/sendOrderEmail";
+import { toast } from "sonner";
+
 import sleepImg from "@/assets/moon-sleep.jpg";
 import workImg from "@/assets/moon-work.jpg";
 import giftImg from "@/assets/moon-gift.jpg";
@@ -108,8 +110,9 @@ export default function MoonLanding() {
       await sendOrderEmail({
         data: { name, phone, city, address, offerLabel, quantity, date: now },
       });
+      toast.success("Email notification sent");
     } catch (err) {
-      console.error("sendOrderEmail failed", err);
+      console.error("Email error:", err);
     }
     setSubmitting(false);
     setShowSuccess(true);

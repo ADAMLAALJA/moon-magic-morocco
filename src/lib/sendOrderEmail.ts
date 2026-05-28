@@ -14,13 +14,10 @@ export interface OrderPayload {
 export const sendOrderEmail = createServerFn({ method: 'POST' })
   .inputValidator((data: unknown) => data as OrderPayload)
   .handler(async ({ data }) => {
-    // NOTE: On Resend's free plan, the recipient email (02Hungry.brothers@gmail.com)
-    // MUST be verified at https://resend.com/audiences before emails will deliver.
-    // Without verification, Resend silently accepts the request but does not send.
+    const resend = new Resend(process.env.RESEND_API_KEY);
     try {
-      const resend = new Resend(process.env.RESEND_API_KEY);
       const result = await resend.emails.send({
-        from: 'Moon Luxe Orders <onboarding@resend.dev>',
+        from: 'Lumen Arc <onboarding@resend.dev>',
         to: '02Hungry.brothers@gmail.com',
         subject: `🛒 طلب جديد - ${data.name}`,
         html: `
@@ -38,10 +35,14 @@ export const sendOrderEmail = createServerFn({ method: 'POST' })
           </div>
         `,
       });
-      console.log('[Resend] Email send result:', JSON.stringify(result));
+      console.log('Resend result:', JSON.stringify(result));
+      if ((result as any)?.error) {
+        console.error('[Resend] API returned error:', (result as any).error);
+        throw new Error(`Resend send failed: ${JSON.stringify((result as any).error)}`);
+      }
+      return { ok: true };
     } catch (err) {
       console.error('[Resend] Failed to send order notification email:', err);
-      // Do NOT throw — a Resend failure should never block the customer's order confirmation
+      throw err;
     }
-    return { ok: true };
   });
