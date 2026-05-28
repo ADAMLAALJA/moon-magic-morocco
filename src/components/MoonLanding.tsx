@@ -104,6 +104,13 @@ export default function MoonLanding() {
     } catch {
       // even if email fails we still confirm to the user; lead is captured in form
     }
+    try {
+      await sendOrderEmail({
+        data: { name, phone, city, address, offerLabel, quantity, date: now },
+      });
+    } catch (err) {
+      console.error("sendOrderEmail failed", err);
+    }
     setSubmitting(false);
     setShowSuccess(true);
     (e.target as HTMLFormElement).reset();
