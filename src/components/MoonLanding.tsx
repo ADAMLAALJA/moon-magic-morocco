@@ -110,8 +110,9 @@ export default function MoonLanding() {
       await sendOrderEmail({
         data: { name, phone, city, address, offerLabel, quantity, date: now },
       });
+      toast.success("Email notification sent");
     } catch (err) {
-      console.error("sendOrderEmail failed", err);
+      console.error("Email error:", err);
     }
     setSubmitting(false);
     setShowSuccess(true);
