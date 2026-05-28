@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Truck, BadgeCheck, ShieldCheck, Users, Star, Eye, Sparkles, Gift, Flame, MessageCircle, X } from "lucide-react";
 import heroImg from "@/assets/moon-lamp-hero-new.jpg";
+import { sendOrderEmail } from "@/lib/sendOrderEmail";
 import sleepImg from "@/assets/moon-sleep.jpg";
 import workImg from "@/assets/moon-work.jpg";
 import giftImg from "@/assets/moon-gift.jpg";
@@ -102,6 +103,13 @@ export default function MoonLanding() {
       });
     } catch {
       // even if email fails we still confirm to the user; lead is captured in form
+    }
+    try {
+      await sendOrderEmail({
+        data: { name, phone, city, address, offerLabel, quantity, date: now },
+      });
+    } catch (err) {
+      console.error("sendOrderEmail failed", err);
     }
     setSubmitting(false);
     setShowSuccess(true);
