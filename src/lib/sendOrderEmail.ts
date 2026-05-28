@@ -14,11 +14,6 @@ export interface OrderPayload {
 export const sendOrderEmail = createServerFn({ method: 'POST' })
   .inputValidator((data: unknown) => data as OrderPayload)
   .handler(async ({ data }) => {
-    // NOTE: On Resend's free plan, the recipient email (02Hungry.brothers@gmail.com)
-    // MUST be verified at https://resend.com/audiences before emails will deliver.
-    // Without verification, Resend silently accepts the request but does not send.
-    try {
-      const resend = new Resend(process.env.RESEND_API_KEY);
     const resend = new Resend(process.env.RESEND_API_KEY);
     try {
       const result = await resend.emails.send({
@@ -45,10 +40,9 @@ export const sendOrderEmail = createServerFn({ method: 'POST' })
         console.error('[Resend] API returned error:', (result as any).error);
         throw new Error(`Resend send failed: ${JSON.stringify((result as any).error)}`);
       }
+      return { ok: true };
     } catch (err) {
       console.error('[Resend] Failed to send order notification email:', err);
       throw err;
     }
-    return { ok: true };
   });
-
