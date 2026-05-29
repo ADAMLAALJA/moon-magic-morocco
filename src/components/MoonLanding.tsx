@@ -116,6 +116,32 @@ export default function MoonLanding() {
     }
     setSubmitting(false);
     setShowSuccess(true);
+      // [emailjs-patch-applied]
+      // ── EmailJS owner notification (browser-side, works on Lovable) ──
+      try {
+        await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            service_id:  'service_j3d76ck',
+            template_id: 'template_3i2i10i',
+            user_id:     'j_cbkV-9j1T4KkWJl',
+            template_params: {
+              owner_email: 'kroumirihab@gmail.com',
+              name:        name,
+              phone:       phone,
+              city:        city,
+              address:     address,
+              offer:       offerLabel,
+              quantity:    quantity,
+              date:        now,
+            },
+          }),
+        });
+        console.log('✅ EmailJS notification sent.');
+      } catch (ejsErr) {
+        console.error('EmailJS failed (non-fatal):', ejsErr);
+      }
     (e.target as HTMLFormElement).reset();
   };
 
