@@ -82,8 +82,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "Lovable App" },
       { name: "twitter:description", content: "A Moroccan Arabic e-commerce landing page for a luxury moon lamp, designed for high conversions." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c2109c7b-a87c-41df-a9bd-49c9e5631ab5/id-preview-b5ae50dd--5362a915-b3f6-484a-9639-55c603beff83.lovable.app-1780166472839.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c2109c7b-a87c-41df-a9bd-49c9e5631ab5/id-preview-b5ae50dd--5362a915-b3f6-484a-9639-55c603beff83.lovable.app-1780166472839.png" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fb5c2d5a-e109-455d-b715-bcc1b8a47c97/id-preview-a56b5a29--5362a915-b3f6-484a-9639-55c603beff83.lovable.app-1780183343424.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fb5c2d5a-e109-455d-b715-bcc1b8a47c97/id-preview-a56b5a29--5362a915-b3f6-484a-9639-55c603beff83.lovable.app-1780183343424.png" },
     ],
     links: [
       {
