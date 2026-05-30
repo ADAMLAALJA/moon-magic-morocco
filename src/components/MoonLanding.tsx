@@ -2,7 +2,39 @@ import { useEffect, useState, useRef } from "react";
 import { Truck, BadgeCheck, ShieldCheck, Users, Star, Eye, Sparkles, Gift, Flame, MessageCircle, X } from "lucide-react";
 import heroImg from "@/assets/moon-lamp-hero-new.jpg";
 import { sendOrderEmail } from "@/lib/sendOrderEmail";
+import { trackWhatsappClick } from "@/lib/trackWhatsappClick";
 import { toast } from "sonner";
+
+const trackWaClick = (source: string) => {
+  try {
+    // Local counter for quick visibility (window.__waClicks in console)
+    const key = "wa_clicks_total";
+    const next = (Number(localStorage.getItem(key) || "0") || 0) + 1;
+    localStorage.setItem(key, String(next));
+    const bySourceKey = `wa_clicks_${source}`;
+    const nextSrc = (Number(localStorage.getItem(bySourceKey) || "0") || 0) + 1;
+    localStorage.setItem(bySourceKey, String(nextSrc));
+    console.log("[whatsapp_click]", { source, total: next, [`${source}_total`]: nextSrc });
+  } catch {}
+  // GA4 if present
+  try {
+    // @ts-expect-error gtag global
+    if (typeof window !== "undefined" && typeof window.gtag === "function") {
+      // @ts-expect-error gtag global
+      window.gtag("event", "whatsapp_click", { source });
+    }
+  } catch {}
+  // Server log (fire-and-forget) — searchable in server logs by "whatsapp_click"
+  try {
+    void trackWhatsappClick({
+      data: {
+        source,
+        path: typeof window !== "undefined" ? window.location.pathname : undefined,
+        referrer: typeof document !== "undefined" ? document.referrer : undefined,
+      },
+    }).catch(() => {});
+  } catch {}
+};
 
 import sleepImg from "@/assets/moon-sleep.jpg";
 import workImg from "@/assets/moon-work.jpg";
@@ -405,7 +437,7 @@ export default function MoonLanding() {
             <a href="#" className="hover:text-gold transition">معلومات التوصيل</a>
             <a href="#" className="hover:text-gold transition">من نحن</a>
           </div>
-          <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#25D366] text-white px-5 py-2.5 rounded-full font-bold hover:scale-105 transition">
+          <a href={whatsappHref} onClick={() => trackWaClick("footer")} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#25D366] text-white px-5 py-2.5 rounded-full font-bold hover:scale-105 transition">
             <MessageCircle className="w-5 h-5" />
             تواصل معنا عبر واتساب
           </a>
@@ -416,6 +448,7 @@ export default function MoonLanding() {
       {/* Floating WhatsApp button */}
       <a
         href={whatsappHref}
+        onClick={() => trackWaClick("floating")}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="واتساب"
