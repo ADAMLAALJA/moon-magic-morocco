@@ -448,6 +448,7 @@ export default function MoonLanding() {
       {/* Floating WhatsApp button */}
       <a
         href={whatsappHref}
+        onClick={() => trackWaClick("floating")}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="واتساب"
