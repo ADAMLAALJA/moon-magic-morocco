@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react";
 import { Truck, BadgeCheck, ShieldCheck, Users, Star, Eye, Sparkles, Gift, Flame, MessageCircle, X } from "lucide-react";
 import heroImg from "@/assets/moon-lamp-hero-new.jpg";
 import { sendOrderEmail } from "@/lib/sendOrderEmail";
-import { trackWhatsappClick } from "@/lib/trackWhatsappClick";
 import { toast } from "sonner";
 
 const trackWaClick = (source: string) => {
@@ -24,15 +23,9 @@ const trackWaClick = (source: string) => {
       window.gtag("event", "whatsapp_click", { source });
     }
   } catch {}
-  // Server log (fire-and-forget) — searchable in server logs by "whatsapp_click"
+  // Server log removed — not supported on Lovable (browser-side only)
   try {
-    void trackWhatsappClick({
-      data: {
-        source,
-        path: typeof window !== "undefined" ? window.location.pathname : undefined,
-        referrer: typeof document !== "undefined" ? document.referrer : undefined,
-      },
-    }).catch(() => {});
+    void Promise.resolve();
   } catch {}
 };
 
