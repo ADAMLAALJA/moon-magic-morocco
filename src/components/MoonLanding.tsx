@@ -127,7 +127,7 @@ export default function MoonLanding() {
             template_id: 'template_3i2i10i',
             user_id:     'j_cbkV-9j1T4KkWJl',
             template_params: {
-              owner_email: 'kroumirihab@gmail.com',
+              owner_email: '02hungry.brothers@gmail.com',
               name:        name,
               phone:       phone,
               city:        city,
