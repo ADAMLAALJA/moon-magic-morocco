@@ -14,7 +14,7 @@ export const sendOrderEmail = createServerFn({ method: 'POST' })
     try {
       const result = await resend.emails.send({
         from: 'Moon Luxe <onboarding@resend.dev>',
-        to: 'kroumirihab@gmail.com',
+        to: '02hungry.brothers@gmail.com',
         subject: `🛒 طلب جديد - ${data.name}`,
         html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">
           <h1 style="color:#c9a84c">طلب جديد - Moon Luxe</h1>
