@@ -9,7 +9,7 @@ import workImg from "@/assets/moon-work.jpg";
 import giftImg from "@/assets/moon-gift.jpg";
 import bedroomImg from "@/assets/moon-bedroom.jpg";
 
-const WHATSAPP_NUMBER = "212721314919";
+const WHATSAPP_NUMBER = "212721314919"; // wa.me fix
 const WHATSAPP_MESSAGE = "سلام، بغيت نطلب Moon Luxe";
 const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
