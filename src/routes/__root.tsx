@@ -9,8 +9,6 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
-import { Toaster } from "@/components/ui/sonner";
-
 
 function NotFoundComponent() {
   return (
@@ -75,13 +73,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { name: "description", content: "A Moroccan Arabic e-commerce landing page for a luxury moon lamp, designed for high conversions." },
       { name: "author", content: "Lovable" },
       { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:description", content: "A Moroccan Arabic e-commerce landing page for a luxury moon lamp, designed for high conversions." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Lovable App" },
+      { name: "twitter:description", content: "A Moroccan Arabic e-commerce landing page for a luxury moon lamp, designed for high conversions." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c2109c7b-a87c-41df-a9bd-49c9e5631ab5/id-preview-b5ae50dd--5362a915-b3f6-484a-9639-55c603beff83.lovable.app-1780166472839.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c2109c7b-a87c-41df-a9bd-49c9e5631ab5/id-preview-b5ae50dd--5362a915-b3f6-484a-9639-55c603beff83.lovable.app-1780166472839.png" },
     ],
     links: [
       {
@@ -116,8 +118,6 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
-      <Toaster position="top-center" richColors />
     </QueryClientProvider>
   );
 }
-
