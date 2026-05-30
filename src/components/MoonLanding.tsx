@@ -437,7 +437,7 @@ export default function MoonLanding() {
             <a href="#" className="hover:text-gold transition">معلومات التوصيل</a>
             <a href="#" className="hover:text-gold transition">من نحن</a>
           </div>
-          <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#25D366] text-white px-5 py-2.5 rounded-full font-bold hover:scale-105 transition">
+          <a href={whatsappHref} onClick={() => trackWaClick("footer")} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#25D366] text-white px-5 py-2.5 rounded-full font-bold hover:scale-105 transition">
             <MessageCircle className="w-5 h-5" />
             تواصل معنا عبر واتساب
           </a>
