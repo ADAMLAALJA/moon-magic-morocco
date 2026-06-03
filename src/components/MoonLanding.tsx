@@ -89,6 +89,9 @@ export default function MoonLanding() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [promoCode, setPromoCode] = useState("");
+  const [promoApplied, setPromoApplied] = useState(false);
+  const [promoMsg, setPromoMsg] = useState<string | null>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const { h, m, s } = useCountdown(2 * 3600 + 47 * 60);
 
