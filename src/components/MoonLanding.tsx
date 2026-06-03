@@ -89,6 +89,9 @@ export default function MoonLanding() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [promoCode, setPromoCode] = useState("");
+  const [promoApplied, setPromoApplied] = useState(false);
+  const [promoMsg, setPromoMsg] = useState<string | null>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const { h, m, s } = useCountdown(2 * 3600 + 47 * 60);
 
@@ -380,7 +383,44 @@ export default function MoonLanding() {
 
             <div className="bg-secondary rounded-xl p-4 flex justify-between text-sm">
               <span className="text-muted-foreground">المجموع</span>
-              <span className="font-black text-gold text-lg">{offer === "single" ? "149 DH" : "279 DH"}</span>
+              <span className="font-black text-gold text-lg">
+                {promoApplied
+                  ? (offer === "single" ? "135 DH" : "250 DH")
+                  : (offer === "single" ? "149 DH" : "279 DH")}
+              </span>
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold mb-2">كود التخفيض</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={promoCode}
+                  onChange={(e) => setPromoCode(e.target.value)}
+                  placeholder="ادخل الكود هنا"
+                  className="flex-1 w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/60 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30 transition"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (promoCode.trim() === "ADAM01") {
+                      setPromoApplied(true);
+                      setPromoMsg("تم تطبيق كود التخفيض بنجاح ✅");
+                    } else {
+                      setPromoApplied(false);
+                      setPromoMsg("كود التخفيض غير صحيح");
+                    }
+                  }}
+                  className="bg-gold text-primary-foreground px-4 py-2 rounded-xl font-bold hover:bg-gold/90 transition"
+                >
+                  تطبيق
+                </button>
+              </div>
+              {promoMsg && (
+                <p className={`text-sm mt-2 ${promoApplied ? "text-green-500" : "text-destructive"}`}>
+                  {promoMsg}
+                </p>
+              )}
             </div>
 
             {errorMsg && <div className="text-sm text-destructive text-center">{errorMsg}</div>}
