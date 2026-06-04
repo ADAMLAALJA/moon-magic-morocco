@@ -111,7 +111,10 @@ export default function MoonLanding() {
       setSubmitting(false);
       return;
     }
-    const offerLabel = offer === "single" ? "قطعة واحدة - 149 DH" : "جوج قطع - 279 DH";
+    const basePrice = offer === "single" ? 149 : 279;
+    const discountedPrice = promoApplied ? (offer === "single" ? 135 : 250) : basePrice;
+    const offerLabel = offer === "single" ? "قطعة واحدة" : "جوج قطع";
+    const priceLabel = `${discountedPrice} DH${promoApplied ? ` (بعد خصم كود: ${promoCode.trim()})` : ""}`;
     const quantity = offer === "single" ? 1 : 2;
     const now = new Date().toLocaleString("fr-MA", { timeZone: "Africa/Casablanca" });
     try {
@@ -128,6 +131,8 @@ export default function MoonLanding() {
           "Adresse": address,
           "Offre choisie": offerLabel,
           "Quantité": quantity,
+          "Prix final": priceLabel,
+          "Code promo": promoApplied ? promoCode.trim() : "—",
           "Date": now,
         }),
       });
@@ -136,7 +141,7 @@ export default function MoonLanding() {
     }
     try {
       await sendOrderEmail({
-        data: { name, phone, city, address, offerLabel, quantity, date: now },
+        data: { name, phone, city, address, offerLabel, quantity, price: priceLabel, promoCode: promoApplied ? promoCode.trim() : "—", date: now },
       });
       toast.success("Email notification sent");
     } catch (err) {
@@ -162,6 +167,8 @@ export default function MoonLanding() {
               address:     address,
               offer:       offerLabel,
               quantity:    quantity,
+              price:       priceLabel,
+              promo_code:  promoApplied ? promoCode.trim() : '—',
               date:        now,
             },
           }),

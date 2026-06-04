@@ -4,7 +4,7 @@ import { Resend } from 'resend';
 
 export interface OrderPayload {
   name: string; phone: string; city: string;
-  address: string; offerLabel: string; quantity: number; date: string;
+  address: string; offerLabel: string; quantity: number; price: string; promoCode: string; date: string;
 }
 
 export const sendOrderEmail = createServerFn({ method: 'POST' })
@@ -25,6 +25,8 @@ export const sendOrderEmail = createServerFn({ method: 'POST' })
             <tr><td style="padding:8px;border:1px solid #eee"><strong>العنوان</strong></td><td style="padding:8px;border:1px solid #eee">${data.address}</td></tr>
             <tr><td style="padding:8px;border:1px solid #eee"><strong>العرض</strong></td><td style="padding:8px;border:1px solid #eee">${data.offerLabel}</td></tr>
             <tr><td style="padding:8px;border:1px solid #eee"><strong>الكمية</strong></td><td style="padding:8px;border:1px solid #eee">${data.quantity}</td></tr>
+            <tr><td style="padding:8px;border:1px solid #eee"><strong>السعر النهائي</strong></td><td style="padding:8px;border:1px solid #eee;color:#c9a84c;font-weight:bold">${data.price}</td></tr>
+            <tr><td style="padding:8px;border:1px solid #eee"><strong>كود التخفيض</strong></td><td style="padding:8px;border:1px solid #eee">${data.promoCode}</td></tr>
             <tr><td style="padding:8px;border:1px solid #eee"><strong>التاريخ</strong></td><td style="padding:8px;border:1px solid #eee">${data.date}</td></tr>
           </table></div>`,
       });
