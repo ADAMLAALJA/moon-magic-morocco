@@ -1,12 +1,12 @@
 import { useEffect, useState, useRef } from "react";
-import { Truck, BadgeCheck, ShieldCheck, Users, Star, Eye, Sparkles, Gift, Flame, MessageCircle, X } from "lucide-react";
+import { Truck, BadgeCheck, ShieldCheck, Star, Eye, Sparkles, Gift, Flame, MessageCircle, X, Lock, Headphones, PackageCheck } from "lucide-react";
 import heroImg from "@/assets/moon-lamp-hero-new.jpg";
+import reelVideo from "@/assets/moon-reel-1.mp4.asset.json";
 import { sendOrderEmail } from "@/lib/sendOrderEmail";
 import { toast } from "sonner";
 
 const trackWaClick = (source: string) => {
   try {
-    // Local counter for quick visibility (window.__waClicks in console)
     const key = "wa_clicks_total";
     const next = (Number(localStorage.getItem(key) || "0") || 0) + 1;
     localStorage.setItem(key, String(next));
@@ -15,7 +15,6 @@ const trackWaClick = (source: string) => {
     localStorage.setItem(bySourceKey, String(nextSrc));
     console.log("[whatsapp_click]", { source, total: next, [`${source}_total`]: nextSrc });
   } catch {}
-  // GA4 if present
   try {
     // @ts-expect-error gtag global
     if (typeof window !== "undefined" && typeof window.gtag === "function") {
@@ -23,26 +22,17 @@ const trackWaClick = (source: string) => {
       window.gtag("event", "whatsapp_click", { source });
     }
   } catch {}
-  // Server log removed — not supported on Lovable (browser-side only)
-  try {
-    void Promise.resolve();
-  } catch {}
 };
 
-import sleepImg from "@/assets/moon-sleep.jpg";
-import workImg from "@/assets/moon-work.jpg";
-import giftImg from "@/assets/moon-gift.jpg";
-import bedroomImg from "@/assets/moon-bedroom.jpg";
-
-const WHATSAPP_NUMBER = "212721314919"; // wa.me fix
+const WHATSAPP_NUMBER = "212721314919";
 const WHATSAPP_MESSAGE = "سلام، بغيت نطلب Moon Luxe";
 const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
 const trustBadges = [
-  { icon: Truck, text: "توصيل مجاني" },
-  { icon: BadgeCheck, text: "الدفع عند الاستلام" },
-  { icon: ShieldCheck, text: "ضمان الجودة" },
-  { icon: Users, text: "+5000 زبون راضي" },
+  { icon: Truck, text: "🚚 Livraison rapide à Casablanca" },
+  { icon: BadgeCheck, text: "💰 Paiement à la livraison" },
+  { icon: Lock, text: "🔒 Commande sécurisée" },
+  { icon: Star, text: "⭐ Produit tendance et apprécié" },
 ];
 
 const benefits = [
@@ -72,6 +62,12 @@ const reviews = [
   },
 ];
 
+const reels = [
+  { src: reelVideo.url, label: "Démo produit" },
+  { src: reelVideo.url, label: "Unboxing" },
+  { src: reelVideo.url, label: "Ambiance chambre" },
+];
+
 function useCountdown(initial: number) {
   const [t, setT] = useState(initial);
   useEffect(() => {
@@ -89,9 +85,6 @@ export default function MoonLanding() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [promoCode, setPromoCode] = useState("");
-  const [promoApplied, setPromoApplied] = useState(false);
-  const [promoMsg, setPromoMsg] = useState<string | null>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const { h, m, s } = useCountdown(2 * 3600 + 47 * 60);
 
@@ -105,16 +98,14 @@ export default function MoonLanding() {
     const name = (fd.get("name") || "").toString().trim().slice(0, 100);
     const phone = (fd.get("phone") || "").toString().trim().slice(0, 30);
     const city = (fd.get("city") || "").toString().trim().slice(0, 100);
-    const address = (fd.get("address") || "").toString().trim().slice(0, 300);
-    if (!name || !phone || !city || !address) {
+    if (!name || !phone || !city) {
       setErrorMsg("عمر جميع الخانات من فضلك");
       setSubmitting(false);
       return;
     }
-    const basePrice = offer === "single" ? 149 : 279;
-    const discountedPrice = promoApplied ? (offer === "single" ? 135 : 250) : basePrice;
+    const price = offer === "single" ? 99 : 169;
     const offerLabel = offer === "single" ? "قطعة واحدة" : "جوج قطع";
-    const priceLabel = `${discountedPrice} DH${promoApplied ? ` (بعد خصم كود: ${promoCode.trim()})` : ""}`;
+    const priceLabel = `${price} DH`;
     const quantity = offer === "single" ? 1 : 2;
     const now = new Date().toLocaleString("fr-MA", { timeZone: "Africa/Casablanca" });
     try {
@@ -128,20 +119,16 @@ export default function MoonLanding() {
           "Nom complet": name,
           "Téléphone": phone,
           "Ville": city,
-          "Adresse": address,
           "Offre choisie": offerLabel,
           "Quantité": quantity,
           "Prix final": priceLabel,
-          "Code promo": promoApplied ? promoCode.trim() : "—",
           "Date": now,
         }),
       });
-    } catch {
-      // even if email fails we still confirm to the user; lead is captured in form
-    }
+    } catch {}
     try {
       await sendOrderEmail({
-        data: { name, phone, city, address, offerLabel, quantity, price: priceLabel, promoCode: promoApplied ? promoCode.trim() : "—", date: now },
+        data: { name, phone, city, address: "—", offerLabel, quantity, price: priceLabel, promoCode: "—", date: now },
       });
       toast.success("Email notification sent");
     } catch (err) {
@@ -149,34 +136,24 @@ export default function MoonLanding() {
     }
     setSubmitting(false);
     setShowSuccess(true);
-      // [emailjs-patch-applied]
-      // ── EmailJS owner notification (browser-side, works on Lovable) ──
-      try {
-        await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            service_id:  'service_j3d76ck',
-            template_id: 'template_3i2i10i',
-            user_id:     'j_cbkV-9j1T4KkWJl',
-            template_params: {
-              owner_email: '02hungry.brothers@gmail.com',
-              name:        name,
-              phone:       phone,
-              city:        city,
-              address:     address,
-              offer:       offerLabel,
-              quantity:    quantity,
-              price:       priceLabel,
-              promo_code:  promoApplied ? promoCode.trim() : '—',
-              date:        now,
-            },
-          }),
-        });
-        console.log('✅ EmailJS notification sent.');
-      } catch (ejsErr) {
-        console.error('EmailJS failed (non-fatal):', ejsErr);
-      }
+    try {
+      await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          service_id:  'service_j3d76ck',
+          template_id: 'template_3i2i10i',
+          user_id:     'j_cbkV-9j1T4KkWJl',
+          template_params: {
+            owner_email: '02hungry.brothers@gmail.com',
+            name, phone, city, address: '—',
+            offer: offerLabel, quantity, price: priceLabel, promo_code: '—', date: now,
+          },
+        }),
+      });
+    } catch (ejsErr) {
+      console.error('EmailJS failed (non-fatal):', ejsErr);
+    }
     (e.target as HTMLFormElement).reset();
   };
 
@@ -231,13 +208,14 @@ export default function MoonLanding() {
               </div>
               <span className="text-muted-foreground">•</span>
               <span className="text-sm bg-secondary px-3 py-1 rounded-full border border-border">
-                🔥 +1200 قطعة تباعت
+                ⭐ Produit tendance
               </span>
             </div>
 
             <button onClick={scrollToForm} className="btn-gold pulse-glow mt-7 text-lg w-full sm:w-auto">
-              اطلب الآن 🌙
+              اطلب الآن 🌙 — 99 DH
             </button>
+            <p className="mt-2 text-xs text-muted-foreground">💰 الدفع عند الاستلام</p>
           </div>
         </div>
       </section>
@@ -258,38 +236,36 @@ export default function MoonLanding() {
         </div>
       </section>
 
-      {/* Product gallery */}
+      {/* Video Reels — mobile-first vertical */}
       <section className="px-5 py-8 max-w-5xl mx-auto">
-        <h2 className="text-center text-2xl sm:text-3xl mb-6">
-          مصباح <span className="text-gold">القمر</span> فكل لحظة من حياتك
+        <h2 className="text-center text-2xl sm:text-3xl mb-2">
+          شوف <span className="text-gold">المصباح</span> فالحقيقة
         </h2>
-        <div className="grid grid-cols-2 gap-3 sm:gap-4">
-          {[
-            { img: bedroomImg, label: "Relax" },
-            { img: sleepImg, label: "Sleep" },
-            { img: workImg, label: "Work" },
-            { img: giftImg, label: "Gift" },
-          ].map((it, i) => (
-            <div
-              key={i}
-              className="group relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-card aspect-square moon-glow bg-card"
-            >
-              <img
-                src={it.img}
-                alt={`Moon Luxe — ${it.label}`}
-                loading="lazy"
-                width={768}
-                height={768}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        <p className="text-center text-muted-foreground mb-6">فيديوهات حقيقية — démo, unboxing, ambiance</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {reels.map((v, i) => (
+            <div key={i} className="relative rounded-3xl overflow-hidden shadow-glow border border-gold/20 bg-card aspect-[9/16] max-w-sm mx-auto w-full">
+              <video
+                src={v.src}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="w-full h-full object-cover"
               />
-              <span className="absolute top-3 left-3 bg-background/85 backdrop-blur text-foreground text-xs sm:text-sm font-bold px-3 py-1.5 rounded-full border border-gold/30 shadow-card">
-                {it.label}
+              <span className="absolute top-3 left-3 bg-background/85 backdrop-blur text-foreground text-xs font-bold px-3 py-1.5 rounded-full border border-gold/30">
+                {v.label}
               </span>
             </div>
           ))}
         </div>
+        <div className="text-center mt-6">
+          <button onClick={scrollToForm} className="btn-gold pulse-glow text-base">
+            استفد من العرض الآن 🌙
+          </button>
+        </div>
       </section>
-
 
       {/* Offers */}
       <section className="px-5 py-10 max-w-5xl mx-auto">
@@ -303,9 +279,10 @@ export default function MoonLanding() {
           >
             <div className="text-sm text-muted-foreground mb-2">العرض العادي</div>
             <div className="text-2xl font-bold mb-3">قطعة واحدة</div>
-            <div className="flex items-baseline gap-3 mb-4">
-              <span className="text-3xl font-black text-gold">149 DH</span>
-              <span className="text-muted-foreground line-through">219 DH</span>
+            <div className="flex items-baseline gap-3 mb-4 flex-wrap">
+              <span className="text-3xl font-black text-gold glow-text">99 DH</span>
+              <span className="text-muted-foreground line-through text-lg">149 DH</span>
+              <span className="text-xs bg-gold/15 text-gold px-2 py-0.5 rounded-full border border-gold/30">-34%</span>
             </div>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-center gap-2"><Truck className="w-4 h-4 text-gold" /> توصيل مجاني</li>
@@ -320,12 +297,13 @@ export default function MoonLanding() {
             <div className="absolute -top-3 right-6 bg-gold text-primary-foreground text-xs font-black px-3 py-1 rounded-full shadow-glow">
               🔥 الأكثر طلباً
             </div>
-            <div className="text-sm text-gold mb-2">وفّر 19 DH</div>
+            <div className="text-sm text-gold mb-2">وفّر 29 DH</div>
             <div className="text-2xl font-bold mb-1">جوج قطع</div>
             <div className="text-xs text-muted-foreground mb-3">بدّل دارك بجوج مصابيح</div>
-            <div className="flex items-baseline gap-3 mb-4">
-              <span className="text-3xl font-black text-gold">279 DH</span>
-              <span className="text-muted-foreground line-through">438 DH</span>
+            <div className="flex items-baseline gap-3 mb-4 flex-wrap">
+              <span className="text-3xl font-black text-gold glow-text">169 DH</span>
+              <span className="text-muted-foreground line-through text-lg">279 DH</span>
+              <span className="text-xs bg-gold/15 text-gold px-2 py-0.5 rounded-full border border-gold/30">-40%</span>
             </div>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-center gap-2"><Truck className="w-4 h-4 text-gold" /> توصيل مجاني</li>
@@ -341,13 +319,8 @@ export default function MoonLanding() {
         <div className="bg-card border border-gold/40 rounded-2xl p-6 shadow-glow">
           <div className="flex items-center gap-2 text-gold font-bold mb-3">
             <Flame className="w-5 h-5" />
-            <span>العرض محدود والكمية كتسالي بسرعة!</span>
+            <span>العرض محدود — استفد قبل ما يسالي!</span>
           </div>
-          <div className="h-3 bg-secondary rounded-full overflow-hidden mb-2">
-            <div className="h-full bg-gold rounded-full" style={{ width: "82%" }} />
-          </div>
-          <div className="text-xs text-muted-foreground mb-5">82% من المخزون تباع — بقاو 47 قطعة فقط</div>
-
           <div className="grid grid-cols-3 gap-2 text-center">
             {[{ v: h, l: "ساعة" }, { v: m, l: "دقيقة" }, { v: s, l: "ثانية" }].map((x, i) => (
               <div key={i} className="bg-secondary rounded-xl p-3 border border-border">
@@ -367,14 +340,13 @@ export default function MoonLanding() {
               🛒 أكمل طلبك
             </div>
             <h2 className="text-2xl sm:text-3xl">دخّل معلوماتك باش نوصلك الطلب</h2>
-            <p className="text-sm text-muted-foreground mt-2">الدفع عند الاستلام • التوصيل مجاني</p>
+            <p className="text-sm text-muted-foreground mt-2">💰 الدفع عند الاستلام • 🚚 التوصيل مجاني</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <Field label="الاسم الكامل" name="name" placeholder="مثال: محمد العلوي" />
             <Field label="رقم الهاتف" name="phone" type="tel" placeholder="06XXXXXXXX" />
             <Field label="المدينة" name="city" placeholder="مثال: الدار البيضاء" />
-            <Field label="العنوان الكامل" name="address" placeholder="الحي، الشارع، الرقم" />
 
             <div>
               <label className="block text-sm font-bold mb-2">اختار العرض</label>
@@ -383,71 +355,63 @@ export default function MoonLanding() {
                 onChange={(e) => setOffer(e.target.value as "single" | "double")}
                 className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30 transition"
               >
-                <option value="single">قطعة واحدة - 149 DH</option>
-                <option value="double">جوج قطع - 279 DH (الأكثر طلباً)</option>
+                <option value="single">قطعة واحدة - 99 DH</option>
+                <option value="double">جوج قطع - 169 DH (الأكثر طلباً)</option>
               </select>
             </div>
 
-            <div className="bg-secondary rounded-xl p-4 flex justify-between text-sm">
+            <div className="bg-secondary rounded-xl p-4 flex justify-between items-center text-sm">
               <span className="text-muted-foreground">المجموع</span>
-              <span className="font-black text-gold text-lg">
-                {promoApplied
-                  ? (offer === "single" ? "135 DH" : "250 DH")
-                  : (offer === "single" ? "149 DH" : "279 DH")}
+              <span className="flex items-baseline gap-2">
+                <span className="text-muted-foreground line-through text-sm">
+                  {offer === "single" ? "149 DH" : "279 DH"}
+                </span>
+                <span className="font-black text-gold text-lg">
+                  {offer === "single" ? "99 DH" : "169 DH"}
+                </span>
               </span>
-            </div>
-
-            <div>
-              <label className="block text-sm font-bold mb-2">كود التخفيض</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={promoCode}
-                  onChange={(e) => setPromoCode(e.target.value)}
-                  placeholder="ادخل الكود هنا"
-                  className="flex-1 w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground placeholder:text-muted-foreground/60 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30 transition"
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (promoCode.trim() === "ADAM01") {
-                      setPromoApplied(true);
-                      setPromoMsg("تم تطبيق كود التخفيض بنجاح ✅");
-                    } else {
-                      setPromoApplied(false);
-                      setPromoMsg("كود التخفيض غير صحيح");
-                    }
-                  }}
-                  className="bg-gold text-primary-foreground px-4 py-2 rounded-xl font-bold hover:bg-gold/90 transition"
-                >
-                  تطبيق
-                </button>
-              </div>
-              {promoMsg && (
-                <p className={`text-sm mt-2 ${promoApplied ? "text-green-500" : "text-destructive"}`}>
-                  {promoMsg}
-                </p>
-              )}
             </div>
 
             {errorMsg && <div className="text-sm text-destructive text-center">{errorMsg}</div>}
 
             <button type="submit" disabled={submitting} className="btn-gold pulse-glow w-full text-lg disabled:opacity-70">
-              {submitting ? "جاري الإرسال..." : "تأكيد الطلب ✓"}
+              {submitting ? "جاري الإرسال..." : "تأكيد الطلب ✓ — الدفع عند الاستلام"}
             </button>
 
-            <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground pt-2">
+            <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground pt-2 flex-wrap">
               <span className="flex items-center gap-1"><BadgeCheck className="w-4 h-4 text-gold" /> الدفع عند الاستلام</span>
               <span className="flex items-center gap-1"><Truck className="w-4 h-4 text-gold" /> توصيل مجاني</span>
+              <span className="flex items-center gap-1"><Lock className="w-4 h-4 text-gold" /> Commande sécurisée</span>
             </div>
           </form>
         </div>
       </section>
 
+      {/* Trust section */}
+      <section className="px-5 py-10 max-w-5xl mx-auto">
+        <h2 className="text-center text-2xl sm:text-3xl mb-8">
+          علاش تشري <span className="text-gold">من عندنا</span>؟
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          {[
+            { icon: BadgeCheck, text: "Paiement à la livraison" },
+            { icon: Truck, text: "Livraison rapide" },
+            { icon: Headphones, text: "Service client réactif" },
+            { icon: PackageCheck, text: "Produit conforme aux photos" },
+          ].map((t, i) => (
+            <div key={i} className="bg-card border border-gold/20 rounded-2xl p-4 text-center hover:border-gold/60 transition-all">
+              <div className="w-12 h-12 mx-auto rounded-xl bg-gold/15 flex items-center justify-center mb-3 border border-gold/30">
+                <t.icon className="w-6 h-6 text-gold" />
+              </div>
+              <p className="text-sm font-bold">✅ {t.text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Testimonials */}
       <section className="px-5 py-10 max-w-5xl mx-auto">
-        <h2 className="text-center text-2xl sm:text-3xl mb-2">شنو كيقولو <span className="text-gold">زبائننا</span></h2>
-        <p className="text-center text-muted-foreground mb-8">+5000 زبون راضي فجميع المدن المغربية</p>
+        <h2 className="text-center text-2xl sm:text-3xl mb-8">شنو كيقولو <span className="text-gold">زبائننا</span></h2>
 
         <div className="grid sm:grid-cols-3 gap-4">
           {reviews.map((r, i) => (
@@ -500,7 +464,7 @@ export default function MoonLanding() {
       {/* Sticky mobile CTA */}
       <div className="fixed bottom-0 inset-x-0 z-40 md:hidden p-3 bg-background/95 backdrop-blur border-t border-gold/30">
         <button onClick={scrollToForm} className="btn-gold pulse-glow w-full text-base">
-          اطلب الآن 🌙 — 149 DH
+          اطلب الآن 🌙 — 99 DH
         </button>
       </div>
       <div className="md:hidden h-20" />
