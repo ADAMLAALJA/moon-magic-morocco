@@ -68,10 +68,12 @@ const reviews = [
   },
 ];
 
-const reels = [
-  { src: reelVideo.url, label: "Démo produit" },
-  { src: reelVideo.url, label: "Unboxing" },
-  { src: reelVideo.url, label: "Ambiance chambre" },
+const galleryImages = [
+  { src: productImg1, label: "Vue produit 1" },
+  { src: productImg2, label: "Vue produit 2" },
+  { src: productImg3, label: "Vue produit 3" },
+  { src: productImg4, label: "Vue produit 4" },
+  { src: lifestyleImg, label: "Ambiance" },
 ];
 
 function useCountdown(initial: number) {
