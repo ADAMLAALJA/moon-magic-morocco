@@ -73,7 +73,6 @@ const galleryImages = [
   { src: productImg2, label: "Vue produit 2" },
   { src: productImg3, label: "Vue produit 3" },
   { src: productImg4, label: "Vue produit 4" },
-  { src: lifestyleImg, label: "Ambiance" },
 ];
 
 function useCountdown(initial: number) {
@@ -245,27 +244,12 @@ export default function MoonLanding() {
         </div>
       </section>
 
-      {/* Product Gallery — 1 video + image grid with lightbox */}
+      {/* Product Gallery — images first, then 1 video, all same size */}
       <section className="px-5 py-8 max-w-5xl mx-auto">
         <h2 className="text-center text-2xl sm:text-3xl mb-2">
           شوف <span className="text-gold">المصباح</span> فالحقيقة
         </h2>
-        <p className="text-center text-muted-foreground mb-6">فيديو حقيقي + صور المنتج</p>
-
-        <div className="relative rounded-3xl overflow-hidden shadow-glow border border-gold/20 bg-card aspect-[9/16] max-w-sm mx-auto w-full mb-6">
-          <video
-            src={reelVideo.url}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            className="w-full h-full object-cover"
-          />
-          <span className="absolute top-3 left-3 bg-background/85 backdrop-blur text-foreground text-xs font-bold px-3 py-1.5 rounded-full border border-gold/30">
-            Démo produit
-          </span>
-        </div>
+        <p className="text-center text-muted-foreground mb-6">صور المنتج + فيديو حقيقي</p>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
           {galleryImages.map((img, i) => (
@@ -285,7 +269,36 @@ export default function MoonLanding() {
               <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             </button>
           ))}
+
+          <button
+            type="button"
+            onClick={() => setLightbox(reelVideo.url)}
+            className="group relative aspect-square rounded-2xl overflow-hidden border border-gold/20 bg-card shadow-card focus:outline-none focus:ring-2 focus:ring-gold"
+            aria-label="Lire la vidéo produit"
+          >
+            <video
+              src={reelVideo.url}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-background/20 group-hover:bg-background/10 transition-colors" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-gold/95 flex items-center justify-center shadow-glow">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-primary-foreground ml-0.5">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            </div>
+            <span className="absolute top-2 left-2 bg-background/85 backdrop-blur text-foreground text-[10px] font-bold px-2 py-1 rounded-full border border-gold/30">
+              Vidéo
+            </span>
+          </button>
         </div>
+
 
         <div className="text-center mt-6">
           <button onClick={scrollToForm} className="btn-gold pulse-glow text-base">
@@ -515,9 +528,11 @@ export default function MoonLanding() {
 
       <Dialog open={!!lightbox} onOpenChange={(o) => !o && setLightbox(null)}>
         <DialogContent className="max-w-3xl p-2 bg-card border-gold/30">
-          {lightbox && (
+          {lightbox && (lightbox.endsWith(".mp4") || lightbox.includes("moon-reel") ? (
+            <video src={lightbox} controls autoPlay playsInline className="w-full h-auto rounded-lg max-h-[85vh] bg-black" />
+          ) : (
             <img src={lightbox} alt="Aperçu produit" className="w-full h-auto rounded-lg object-contain max-h-[85vh]" />
-          )}
+          ))}
         </DialogContent>
       </Dialog>
     </div>
