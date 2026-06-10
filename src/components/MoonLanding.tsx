@@ -512,6 +512,14 @@ export default function MoonLanding() {
           </div>
         </div>
       )}
+
+      <Dialog open={!!lightbox} onOpenChange={(o) => !o && setLightbox(null)}>
+        <DialogContent className="max-w-3xl p-2 bg-card border-gold/30">
+          {lightbox && (
+            <img src={lightbox} alt="Aperçu produit" className="w-full h-auto rounded-lg object-contain max-h-[85vh]" />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
