@@ -2,11 +2,9 @@ import { useEffect, useState, useRef } from "react";
 import { Truck, BadgeCheck, ShieldCheck, Star, Eye, Sparkles, Gift, Flame, MessageCircle, X, Lock, Headphones, PackageCheck } from "lucide-react";
 import heroImg from "@/assets/moon-lamp-hero-new.jpg";
 import reelVideo from "@/assets/moon-reel-1.mp4.asset.json";
-import productImg1 from "@/assets/moon-lamp-real.jpg";
-import productImg2 from "@/assets/moon-lamp-2.jpg";
-import productImg3 from "@/assets/moon-gift.jpg";
-import productImg4 from "@/assets/moon-bedroom.jpg";
-import lifestyleImg from "@/assets/moon-lamp-lifestyle-v2.jpg";
+import productImg1 from "@/assets/moon-gallery-1.png.asset.json";
+import productImg2 from "@/assets/moon-gallery-2.png.asset.json";
+import productImg3 from "@/assets/moon-gallery-3.png.asset.json";
 import { sendOrderEmail } from "@/lib/sendOrderEmail";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { toast } from "sonner";
@@ -69,10 +67,9 @@ const reviews = [
 ];
 
 const galleryImages = [
-  { src: productImg1, label: "Vue produit 1" },
-  { src: productImg2, label: "Vue produit 2" },
-  { src: productImg3, label: "Vue produit 3" },
-  { src: productImg4, label: "Vue produit 4" },
+  { src: productImg1.url, label: "Vue produit 1" },
+  { src: productImg2.url, label: "Vue produit 2" },
+  { src: productImg3.url, label: "Vue produit 3" },
 ];
 
 function useCountdown(initial: number) {
@@ -251,7 +248,7 @@ export default function MoonLanding() {
         </h2>
         <p className="text-center text-muted-foreground mb-6">صور المنتج + فيديو حقيقي</p>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           {galleryImages.map((img, i) => (
             <button
               type="button"
