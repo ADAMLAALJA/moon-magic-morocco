@@ -528,9 +528,11 @@ export default function MoonLanding() {
 
       <Dialog open={!!lightbox} onOpenChange={(o) => !o && setLightbox(null)}>
         <DialogContent className="max-w-3xl p-2 bg-card border-gold/30">
-          {lightbox && (
+          {lightbox && (lightbox.endsWith(".mp4") || lightbox.includes("moon-reel") ? (
+            <video src={lightbox} controls autoPlay playsInline className="w-full h-auto rounded-lg max-h-[85vh] bg-black" />
+          ) : (
             <img src={lightbox} alt="Aperçu produit" className="w-full h-auto rounded-lg object-contain max-h-[85vh]" />
-          )}
+          ))}
         </DialogContent>
       </Dialog>
     </div>
