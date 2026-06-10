@@ -245,30 +245,48 @@ export default function MoonLanding() {
         </div>
       </section>
 
-      {/* Video Reels — mobile-first vertical */}
+      {/* Product Gallery — 1 video + image grid with lightbox */}
       <section className="px-5 py-8 max-w-5xl mx-auto">
         <h2 className="text-center text-2xl sm:text-3xl mb-2">
           شوف <span className="text-gold">المصباح</span> فالحقيقة
         </h2>
-        <p className="text-center text-muted-foreground mb-6">فيديوهات حقيقية — démo, unboxing, ambiance</p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {reels.map((v, i) => (
-            <div key={i} className="relative rounded-3xl overflow-hidden shadow-glow border border-gold/20 bg-card aspect-[9/16] max-w-sm mx-auto w-full">
-              <video
-                src={v.src}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                className="w-full h-full object-cover"
+        <p className="text-center text-muted-foreground mb-6">فيديو حقيقي + صور المنتج</p>
+
+        <div className="relative rounded-3xl overflow-hidden shadow-glow border border-gold/20 bg-card aspect-[9/16] max-w-sm mx-auto w-full mb-6">
+          <video
+            src={reelVideo.url}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className="w-full h-full object-cover"
+          />
+          <span className="absolute top-3 left-3 bg-background/85 backdrop-blur text-foreground text-xs font-bold px-3 py-1.5 rounded-full border border-gold/30">
+            Démo produit
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+          {galleryImages.map((img, i) => (
+            <button
+              type="button"
+              key={i}
+              onClick={() => setLightbox(img.src)}
+              className="group relative aspect-square rounded-2xl overflow-hidden border border-gold/20 bg-card shadow-card focus:outline-none focus:ring-2 focus:ring-gold"
+              aria-label={`Agrandir ${img.label}`}
+            >
+              <img
+                src={img.src}
+                alt={img.label}
+                loading="lazy"
+                className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
               />
-              <span className="absolute top-3 left-3 bg-background/85 backdrop-blur text-foreground text-xs font-bold px-3 py-1.5 rounded-full border border-gold/30">
-                {v.label}
-              </span>
-            </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            </button>
           ))}
         </div>
+
         <div className="text-center mt-6">
           <button onClick={scrollToForm} className="btn-gold pulse-glow text-base">
             استفد من العرض الآن 🌙
