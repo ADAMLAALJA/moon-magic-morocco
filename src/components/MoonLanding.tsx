@@ -2,7 +2,13 @@ import { useEffect, useState, useRef } from "react";
 import { Truck, BadgeCheck, ShieldCheck, Star, Eye, Sparkles, Gift, Flame, MessageCircle, X, Lock, Headphones, PackageCheck } from "lucide-react";
 import heroImg from "@/assets/moon-lamp-hero-new.jpg";
 import reelVideo from "@/assets/moon-reel-1.mp4.asset.json";
+import productImg1 from "@/assets/moon-lamp-real.jpg";
+import productImg2 from "@/assets/moon-lamp-2.jpg";
+import productImg3 from "@/assets/moon-gift.jpg";
+import productImg4 from "@/assets/moon-bedroom.jpg";
+import lifestyleImg from "@/assets/moon-lamp-lifestyle-v2.jpg";
 import { sendOrderEmail } from "@/lib/sendOrderEmail";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { toast } from "sonner";
 
 const trackWaClick = (source: string) => {
