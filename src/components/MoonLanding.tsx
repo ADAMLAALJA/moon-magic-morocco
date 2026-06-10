@@ -73,7 +73,6 @@ const galleryImages = [
   { src: productImg2, label: "Vue produit 2" },
   { src: productImg3, label: "Vue produit 3" },
   { src: productImg4, label: "Vue produit 4" },
-  { src: lifestyleImg, label: "Ambiance" },
 ];
 
 function useCountdown(initial: number) {
