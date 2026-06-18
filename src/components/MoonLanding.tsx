@@ -218,7 +218,7 @@ export default function MoonLanding() {
             </div>
 
             <button onClick={scrollToForm} className="btn-gold pulse-glow mt-7 text-lg w-full sm:w-auto">
-              اطلب الآن 🌙 — 99 DH
+              اطلب الآن 🌙 — 59 DH
             </button>
             <p className="mt-2 text-xs text-muted-foreground">💰 الدفع عند الاستلام</p>
           </div>
@@ -307,14 +307,14 @@ export default function MoonLanding() {
       {/* Offers */}
       <section className="px-5 py-10 max-w-5xl mx-auto">
         <div className="text-center mb-6 space-y-2">
-          <div className="text-xl sm:text-2xl font-black text-red-500 animate-pulse">
-            🔥 تخفيض خيالي لفترة محدودة 🔥
+          <div className="text-2xl sm:text-3xl font-black text-red-500 animate-pulse">
+            🔥 تخفيض خيالي -50% 🔥
           </div>
           <div className="text-base sm:text-lg font-bold text-gold">
-            ⏳ الكمية محدودة والطلب مرتفع
+            ⏳ العرض صالح لفترة محدودة فقط
           </div>
           <div className="text-sm text-muted-foreground bg-secondary/60 inline-block px-4 py-1.5 rounded-full border border-red-500/30">
-            تبقى أقل من 17 قطعة بالسعر الحالي
+            ⚠️ الكمية محدودة والطلب مرتفع
           </div>
         </div>
 
@@ -404,19 +404,19 @@ export default function MoonLanding() {
                 onChange={(e) => setOffer(e.target.value as "single" | "double")}
                 className="w-full bg-input border border-border rounded-xl px-4 py-3 text-foreground focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30 transition"
               >
-                <option value="single">قطعة واحدة - 99 DH</option>
-                <option value="double">جوج قطع - 169 DH (الأكثر طلباً)</option>
+                <option value="single">قطعة واحدة - 59 DH</option>
+                <option value="double">جوج قطع - 99 DH (الأكثر طلباً)</option>
               </select>
             </div>
 
-            <div className="bg-secondary rounded-xl p-4 flex justify-between items-center text-sm">
-              <span className="text-muted-foreground">المجموع</span>
+            <div className="bg-secondary rounded-xl p-4 flex justify-between items-center text-sm border border-gold/20">
+              <span className="text-muted-foreground font-bold">المجموع</span>
               <span className="flex items-baseline gap-2">
-                <span className="text-muted-foreground line-through text-sm">
-                  {offer === "single" ? "149 DH" : "279 DH"}
+                <span className="text-red-500 line-through text-sm font-bold">
+                  {offer === "single" ? "119 DH" : "199 DH"}
                 </span>
-                <span className="font-black text-gold text-lg">
-                  {offer === "single" ? "99 DH" : "169 DH"}
+                <span className="font-black text-gold text-2xl">
+                  {offer === "single" ? "59 DH" : "99 DH"}
                 </span>
               </span>
             </div>
@@ -513,7 +513,7 @@ export default function MoonLanding() {
       {/* Sticky mobile CTA */}
       <div className="fixed bottom-0 inset-x-0 z-40 md:hidden p-3 bg-background/95 backdrop-blur border-t border-gold/30">
         <button onClick={scrollToForm} className="btn-gold pulse-glow w-full text-base">
-          اطلب الآن 🌙 — 99 DH
+          اطلب الآن 🌙 — 59 DH
         </button>
       </div>
       <div className="md:hidden h-20" />
