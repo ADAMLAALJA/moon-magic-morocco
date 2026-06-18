@@ -108,7 +108,7 @@ export default function MoonLanding() {
       setSubmitting(false);
       return;
     }
-    const price = offer === "single" ? 99 : 169;
+    const price = offer === "single" ? 59 : 99;
     const offerLabel = offer === "single" ? "قطعة واحدة" : "جوج قطع";
     const priceLabel = `${price} DH`;
     const quantity = offer === "single" ? 1 : 2;
@@ -306,6 +306,18 @@ export default function MoonLanding() {
 
       {/* Offers */}
       <section className="px-5 py-10 max-w-5xl mx-auto">
+        <div className="text-center mb-6 space-y-2">
+          <div className="text-xl sm:text-2xl font-black text-red-500 animate-pulse">
+            🔥 تخفيض خيالي لفترة محدودة 🔥
+          </div>
+          <div className="text-base sm:text-lg font-bold text-gold">
+            ⏳ الكمية محدودة والطلب مرتفع
+          </div>
+          <div className="text-sm text-muted-foreground bg-secondary/60 inline-block px-4 py-1.5 rounded-full border border-red-500/30">
+            تبقى أقل من 17 قطعة بالسعر الحالي
+          </div>
+        </div>
+
         <h2 className="text-center text-2xl sm:text-3xl mb-2">اختار العرض اللي يناسبك</h2>
         <p className="text-center text-muted-foreground mb-8">عروض حصرية بأسعار ما كتلقاهاش فبلاصة أخرى</p>
 
@@ -317,9 +329,9 @@ export default function MoonLanding() {
             <div className="text-sm text-muted-foreground mb-2">العرض العادي</div>
             <div className="text-2xl font-bold mb-3">قطعة واحدة</div>
             <div className="flex items-baseline gap-3 mb-4 flex-wrap">
-              <span className="text-3xl font-black text-gold glow-text">99 DH</span>
-              <span className="text-muted-foreground line-through text-lg">149 DH</span>
-              <span className="text-xs bg-gold/15 text-gold px-2 py-0.5 rounded-full border border-gold/30">-34%</span>
+              <span className="text-4xl sm:text-5xl font-black text-gold glow-text">59 DH</span>
+              <span className="text-red-500 line-through text-lg font-bold">119 DH</span>
+              <span className="text-xs bg-red-500 text-white px-2.5 py-1 rounded-full font-black">-50%</span>
             </div>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-center gap-2"><Truck className="w-4 h-4 text-gold" /> توصيل مجاني</li>
@@ -334,13 +346,13 @@ export default function MoonLanding() {
             <div className="absolute -top-3 right-6 bg-gold text-primary-foreground text-xs font-black px-3 py-1 rounded-full shadow-glow">
               🔥 الأكثر طلباً
             </div>
-            <div className="text-sm text-gold mb-2">وفّر 29 DH</div>
+            <div className="text-sm text-gold mb-2">وفّر 100 DH</div>
             <div className="text-2xl font-bold mb-1">جوج قطع</div>
             <div className="text-xs text-muted-foreground mb-3">بدّل دارك بجوج مصابيح</div>
             <div className="flex items-baseline gap-3 mb-4 flex-wrap">
-              <span className="text-3xl font-black text-gold glow-text">169 DH</span>
-              <span className="text-muted-foreground line-through text-lg">279 DH</span>
-              <span className="text-xs bg-gold/15 text-gold px-2 py-0.5 rounded-full border border-gold/30">-40%</span>
+              <span className="text-4xl sm:text-5xl font-black text-gold glow-text">99 DH</span>
+              <span className="text-red-500 line-through text-lg font-bold">199 DH</span>
+              <span className="text-sm bg-red-500 text-white px-3 py-1.5 rounded-full font-black">-50%</span>
             </div>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-center gap-2"><Truck className="w-4 h-4 text-gold" /> توصيل مجاني</li>
