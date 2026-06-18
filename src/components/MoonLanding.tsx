@@ -108,7 +108,7 @@ export default function MoonLanding() {
       setSubmitting(false);
       return;
     }
-    const price = offer === "single" ? 99 : 169;
+    const price = offer === "single" ? 59 : 99;
     const offerLabel = offer === "single" ? "قطعة واحدة" : "جوج قطع";
     const priceLabel = `${price} DH`;
     const quantity = offer === "single" ? 1 : 2;
